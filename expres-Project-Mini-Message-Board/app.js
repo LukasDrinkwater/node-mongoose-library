@@ -1,3 +1,4 @@
+require("dotenv").config();
 const createError = require("http-errors");
 const express = require("express");
 const path = require("path");
@@ -15,8 +16,7 @@ const app = express();
 // setup the mongoose mongoDB connection
 const mongoose = requrie("mongoose");
 mongoose.set("strictQuery, false");
-const mongoDB =
-  "mongodb+srv://Lukas:Dolomite17@cluster0.5xartib.mongodb.net/local_library?retryWrites=true&w=majority";
+const mongoDB = process.env.MONGODB_STRING;
 
 main().catch((err) => console.log(err));
 async function main() {
