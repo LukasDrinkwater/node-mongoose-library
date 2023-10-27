@@ -14,8 +14,8 @@ const { mongo } = require("mongoose");
 const app = express();
 
 // setup the mongoose mongoDB connection
-const mongoose = requrie("mongoose");
-mongoose.set("strictQuery, false");
+const mongoose = require("mongoose");
+mongoose.set("strictQuery", false);
 const mongoDB = process.env.MONGODB_STRING;
 
 main().catch((err) => console.log(err));
