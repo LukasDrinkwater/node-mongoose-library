@@ -9,7 +9,7 @@ const indexRouter = require("./routes/index");
 const usersRouter = require("./routes/users");
 const { mongo } = require("mongoose");
 
-// mongodb+srv://Lukas:Dolomite17@cluster0.5xartib.mongodb.net/local_library?retryWrites=true&w=majority
+// mongodb+srv://username:password@cluster0.5xartib.mongodb.net/local_library?retryWrites=true&w=majority
 
 const app = express();
 
