@@ -68,6 +68,7 @@ async function bookCreate(index, title, summary, isbn, author, genre) {
   if (genre != false) bookdetail.genre = genre;
 
   const book = new Book(bookdetail);
+  // book.save() pushes a new book to the DB
   await book.save();
   books[index] = book;
   console.log(`Added book: ${title}`);

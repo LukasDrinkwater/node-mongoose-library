@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const { DateTime } = require("luxon");
 
 const Schema = mongoose.Schema;
 
@@ -27,5 +28,38 @@ AuthorSchema.virtual("url").get(function () {
   return `/catalog/author/${this._id}`;
 });
 
+// better way of doing the time
+AuthorSchema.virtual("date_of_birth_formatted").get(function () {
+  // console.log(DateTime.fromJSDate(this.date_of_birth));
+  // console.log(
+  //   DateTime.fromJSDate(this.due_back).toLocaleString(DateTime.DATE_MED)
+  // );
+  if (this.date_of_birth !== undefined) {
+    return DateTime.fromJSDate(this.date_of_birth).toLocaleString(
+      DateTime.DATE_MED
+    );
+  } else {
+    return "";
+  }
+});
+
+AuthorSchema.virtual("date_of_death_formatted").get(function () {
+  // console.log(
+  //   `ITS ${this.first_name} ----- ${DateTime.fromJSDate(this.date_of_death)}`
+  // );
+
+  // console.log(
+  //   DateTime.fromJSDate(this.due_back).toLocaleString(DateTime.DATE_MED)
+  // );
+  if (this.date_of_death !== undefined) {
+    return DateTime.fromJSDate(this.date_of_death).toLocaleString(
+      DateTime.DATE_MED
+    );
+  } else {
+    return "";
+  }
+});
+
 // Export model
+// This is that you use to actually request for the data
 module.exports = mongoose.model("Author", AuthorSchema);

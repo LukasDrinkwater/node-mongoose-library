@@ -1,0 +1,3 @@
+model files define the different data structures that are stored in the database
+
+The Schema defines the structure. The object properties are almost like the columns/atributes in the database
