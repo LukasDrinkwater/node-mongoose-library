@@ -3,6 +3,8 @@ const { DateTime } = require("luxon");
 
 const Schema = mongoose.Schema;
 
+const asyncHandler = require("express-async-handler");
+
 const BookInstanceSchema = new Schema({
   // reference to the associated book
   book: { type: Schema.Types.ObjectId, ref: "Book", required: true },
@@ -30,5 +32,12 @@ BookInstanceSchema.virtual("due_back_formatted").get(function () {
   return DateTime.fromJSDate(this.due_back).toLocaleString(DateTime.DATE_MED);
 });
 
+BookInstanceSchema.virtual("due_back_yyyy_mm_dd").get(function () {
+  return DateTime.fromJSDate(this.due_back).toISODate(); // format 'YYYY-MM-DD'
+});
+// Handle BookInstance create on POST.
+exports.bookinstance_create_post = asyncHandler(async (req, res, next) => {
+  res.send("NOT IMPLEMENTED: BookInstance create POST");
+});
 // Export model
 module.exports = mongoose.model("BookInstance", BookInstanceSchema);
