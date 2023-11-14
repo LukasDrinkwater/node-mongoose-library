@@ -10,6 +10,7 @@ block content
     each genre in genre_list
       li
         a(href=genre.url) #{genre.name}
+        p #{genre.url}
 
     else 
       li There are no genres

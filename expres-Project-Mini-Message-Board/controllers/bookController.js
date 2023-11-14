@@ -156,12 +156,71 @@ exports.book_create_post = [
 
 // Display book delete form on GET.
 exports.book_delete_get = asyncHandler(async (req, res, next) => {
-  res.send("NOT IMPLEMENTED: Book delete GET");
+  // get the book and any bookinstances
+  const [book, allBookinstances] = await Promise.all([
+    Book.findById(req.params.id).exec(),
+    BookInstance.find({ book: req.params.id }).exec(),
+  ]);
+
+  if (book === null) {
+    res.redirect("/catalog/books");
+  }
+
+  // console.log(book);
+  console.log(allBookinstances);
+
+  res.render("book_delete", {
+    title: "Delete Book",
+    book: book,
+    allBookinstances: allBookinstances,
+  });
+});
+
+// Handle Author delete on POST.
+exports.author_delete_post = asyncHandler(async (req, res, next) => {
+  // Get details of author and all their books (in parallel)
+  const [author, allBooksByAuthor] = await Promise.all([
+    Author.findById(req.params.id).exec(),
+    Book.find({ author: req.params.id }, "title summary").exec(),
+  ]);
+
+  if (allBooksByAuthor.length > 0) {
+    // Author has books. Render in same way as for GET route.
+    res.render("author_delete", {
+      title: "Delete Author",
+      author: author,
+      author_books: allBooksByAuthor,
+    });
+    return;
+  } else {
+    // Author has no books. Delete object and redirect to the list of authors.
+    await Author.findByIdAndRemove(req.body.authorid);
+
+    res.redirect("/catalog/authors");
+  }
 });
 
 // Handle book delete on POST.
 exports.book_delete_post = asyncHandler(async (req, res, next) => {
-  res.send("NOT IMPLEMENTED: Book delete POST");
+  const [book, allBookinstances] = await Promise.all([
+    Book.findById(req.params.id).exec(),
+    BookInstance.find({ book: req.params.id }).exec(),
+  ]);
+
+  if (allBookinstances.length > 0) {
+    // there are book instances that need to be deleted, render same way as GET route
+    res.render("book_delete", {
+      title: "Delete Book",
+      book: book,
+      allBookinstances: allBookinstances,
+    });
+  } else {
+    // there are no book instances, delete object and redirect to list of books
+    await Book.findByIdAndRemove(req.body.bookid);
+    // bookid is the name of the hidden input field in book_delete.pug
+
+    res.redirect("/catalog/books");
+  }
 });
 
 // Display book update form on GET.

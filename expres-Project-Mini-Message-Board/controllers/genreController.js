@@ -86,13 +86,47 @@ exports.genre_create_post = [
 ];
 
 // Display Genre delete form on GET.
+// Gets the information and checks to see if it can be deleted
 exports.genre_delete_get = asyncHandler(async (req, res, next) => {
-  res.send("NOT IMPLEMENTED: Genre delete GET");
+  // get details of genre and any books in the genre
+  const [genre, allBooksInGenre] = await Promise.all([
+    Genre.findById(req.params.id).exec(),
+    Book.find({ genre: req.params.id }).exec(),
+  ]);
+  console.log(genre);
+
+  // if no books redirect
+  if (genre === null) {
+    res.redirect("/catalog/genres");
+  }
+
+  res.render("genre_delete", {
+    title: "Delete Genre",
+    genre: genre,
+    allBooksInGenre: allBooksInGenre,
+  });
 });
 
 // Handle Genre delete on POST.
 exports.genre_delete_post = asyncHandler(async (req, res, next) => {
-  res.send("NOT IMPLEMENTED: Genre delete POST");
+  const [genre, allBooksInGenre] = await Promise.all([
+    Genre.findById(req.params.id).exec(),
+    Book.find({ author: req.params.id }, "title summary").exec(),
+  ]);
+
+  // check if there are book with that genre
+  if (allBooksInGenre.length > 0) {
+    res.render("genre_delete", {
+      title: "Delete Genre",
+      genre: genre,
+      allBooksInGenre: allBooksInGenre,
+    });
+  } else {
+    // there are no book with that genre so you can delete it.
+    // .genreid is the hidden input field that is created.
+    await Genre.findByIdAndRemove(req.body.genreid);
+    res.redirect("/catalog/genres");
+  }
 });
 
 // Display Genre update form on GET.
