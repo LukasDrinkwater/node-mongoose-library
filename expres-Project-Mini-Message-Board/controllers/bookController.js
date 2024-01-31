@@ -23,6 +23,14 @@ exports.index = asyncHandler(async (req, res, next) => {
     Genre.countDocuments({}).exec(),
   ]);
 
+  console.log(
+    numBooks,
+    numBookInstances,
+    numAvailableBookInstances,
+    numAuthors,
+    numGenres
+  );
+
   res.render("index", {
     title: "Local Library Home",
     book_count: numBooks,
@@ -75,6 +83,8 @@ exports.book_create_get = asyncHandler(async (req, res, next) => {
     Author.find().exec(),
     Genre.find().exec(),
   ]);
+
+  console.log(allAuthors);
 
   res.render("book_form", {
     title: "Create Book",
